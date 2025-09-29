@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { CacheModule } from '@nestjs/cache-manager';
+import { redisStore } from 'cache-manager-redis-yet';
 import { UserWatchlist } from './entities/user-watchlist.entity';
 import { Rating } from './entities/rating.entity';
 import { User } from './entities/user.entity';
@@ -18,6 +20,20 @@ import { WatchlistModule } from './modules/watchlist.module';
       envFilePath: '.env',
     }),
 
+    CacheModule.registerAsync({
+      isGlobal: true,
+      useFactory: async (configService: ConfigService) => ({
+        store: await redisStore({
+          socket: {
+            host: configService.get('REDIS_HOST'),
+            port: configService.get('REDIS_PORT'),
+          },
+        }),
+        ttl: 300, // 5 minutes default TTL
+      }),
+      inject: [ConfigService],
+    }),
+
     TypeOrmModule.forRootAsync({
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
@@ -27,7 +43,7 @@ import { WatchlistModule } from './modules/watchlist.module';
         password: configService.get('DATABASE_PASSWORD'),
         database: configService.get('DATABASE_NAME'),
         entities: [Movie, Genre, User, Rating, UserWatchlist],
-        synchronize: configService.get('NODE_ENV') === 'development',
+        synchronize: true, // Enable for development and Docker setup
         logging: configService.get('NODE_ENV') === 'development',
       }),
       inject: [ConfigService],
