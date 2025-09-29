@@ -8,6 +8,8 @@ import { Genre } from './entities/genre.entity';
 import { Movie } from './entities/movie.entity';
 import { AuthModule } from './modules/auth.module';
 import { MovieModule } from './modules/movie.module';
+import { RatingModule } from './modules/rating.module';
+import { WatchlistModule } from './modules/watchlist.module';
 
 @Module({
   imports: [
@@ -37,6 +39,8 @@ import { MovieModule } from './modules/movie.module';
     // Feature modules
     AuthModule,
     MovieModule,
+    RatingModule,
+    WatchlistModule,
   ],
   controllers: [],
   providers: [],
