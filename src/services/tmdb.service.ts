@@ -7,7 +7,7 @@ import {
   TmdbMovie,
   TmdbMovieDetails,
   TmdbResponse,
-} from 'src/entities/movie.entity';
+} from '../entities/movie.entity';
 
 @Injectable()
 export class TmdbService {
@@ -16,9 +16,9 @@ export class TmdbService {
   private readonly apiKey: string;
   private readonly baseUrl: string;
   constructor(private configService: ConfigService) {
-    this.apiKey = this.configService.get<string>('tmdb.apiKey') || '';
+    this.apiKey = this.configService.get<string>('TMDB_API_KEY') || '';
     this.baseUrl =
-      this.configService.get<string>('tmdb.baseUrl') ||
+      this.configService.get<string>('TMDB_BASE_URL') ||
       'https://api.themoviedb.org/3';
 
     this.httpClient = axios.create({
