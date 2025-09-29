@@ -6,6 +6,7 @@ import { Rating } from './entities/rating.entity';
 import { User } from './entities/user.entity';
 import { Genre } from './entities/genre.entity';
 import { Movie } from './entities/movie.entity';
+import { AuthModule } from './modules/auth.module';
 
 @Module({
   imports: [
@@ -31,6 +32,9 @@ import { Movie } from './entities/movie.entity';
 
     // Repository modules
     TypeOrmModule.forFeature([Movie, Genre, User, Rating, UserWatchlist]),
+
+    // Feature modules
+    AuthModule,
   ],
   controllers: [],
   providers: [],
