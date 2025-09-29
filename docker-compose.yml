@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   app:
     build:
@@ -21,9 +19,6 @@ services:
     depends_on:
       - postgres
       - redis
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
 
   postgres:
     image: postgres:15
