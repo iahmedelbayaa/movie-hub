@@ -10,13 +10,13 @@ import {
   Request,
   ParseIntPipe,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { WatchlistService } from '../services/watchlist.service';
 import { CreateWatchlistDto } from '../dtos/watchlist.dto';
 import { WatchlistType } from '../entities/user-watchlist.entity';
+import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 
 @Controller('watchlist')
-@UseGuards(AuthGuard('jwt'))
+@UseGuards(JwtAuthGuard)
 export class WatchlistController {
   constructor(private readonly watchlistService: WatchlistService) {}
 
