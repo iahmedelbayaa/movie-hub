@@ -10,12 +10,12 @@ import {
   Request,
   ParseIntPipe,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { RatingService } from '../services/rate.service';
 import { CreateRatingDto, UpdateRatingDto } from '../dtos/rating.dto';
+import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 
 @Controller('ratings')
-@UseGuards(AuthGuard('jwt'))
+@UseGuards(JwtAuthGuard)
 export class RatingController {
   constructor(private readonly ratingService: RatingService) {}
 
