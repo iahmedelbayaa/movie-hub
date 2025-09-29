@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { RatingService } from './rate.service';
 import { Rating } from '../entities/rating.entity';
 import { Movie } from '../entities/movie.entity';
-import { User } from '../entities/user.entity';
 import { CreateRatingDto, UpdateRatingDto } from '../dtos/rating.dto';
 import {
   NotFoundException,
