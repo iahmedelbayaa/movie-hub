@@ -6,7 +6,11 @@ import { Rating } from '../entities/rating.entity';
 import { Movie } from '../entities/movie.entity';
 import { User } from '../entities/user.entity';
 import { CreateRatingDto, UpdateRatingDto } from '../dtos/rating.dto';
-import { NotFoundException, ConflictException, ForbiddenException } from '@nestjs/common';
+import {
+  NotFoundException,
+  ConflictException,
+  ForbiddenException,
+} from '@nestjs/common';
 
 describe('RatingService', () => {
   let service: RatingService;
@@ -59,7 +63,9 @@ describe('RatingService', () => {
     }).compile();
 
     service = module.get<RatingService>(RatingService);
-    ratingRepository = module.get<Repository<Rating>>(getRepositoryToken(Rating));
+    ratingRepository = module.get<Repository<Rating>>(
+      getRepositoryToken(Rating),
+    );
     movieRepository = module.get<Repository<Movie>>(getRepositoryToken(Movie));
 
     mockRatingRepository.createQueryBuilder.mockReturnValue(mockQueryBuilder);
@@ -158,7 +164,7 @@ describe('RatingService', () => {
       );
     });
 
-    it('should throw ForbiddenException if user tries to update another user\'s rating', async () => {
+    it("should throw ForbiddenException if user tries to update another user's rating", async () => {
       const updateRatingDto: UpdateRatingDto = {
         rating: 9,
       };
