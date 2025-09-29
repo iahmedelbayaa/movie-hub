@@ -1,57 +1,101 @@
 import {
   Controller,
-  Get,
   Post,
   Delete,
+  Get,
   Body,
   Param,
-  Query,
+  ParseIntPipe,
   UseGuards,
   Request,
-  ParseIntPipe,
+  Query,
+  ValidationPipe,
 } from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiBody,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { WatchlistService } from '../services/watchlist.service';
-import { CreateWatchlistDto } from '../dtos/watchlist.dto';
 import { WatchlistType } from '../entities/user-watchlist.entity';
-import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { CreateWatchlistDto } from 'src/dtos/watchlist.dto';
 
+@ApiTags('watchlist')
 @Controller('watchlist')
 @UseGuards(JwtAuthGuard)
+@ApiBearerAuth()
 export class WatchlistController {
   constructor(private readonly watchlistService: WatchlistService) {}
 
   @Post()
+  @ApiOperation({ summary: 'Add movie to watchlist or favorites' })
+  @ApiBody({ type: CreateWatchlistDto })
+  @ApiResponse({
+    status: 201,
+    description: 'Movie added to watchlist successfully',
+  })
+  @ApiResponse({ status: 409, description: 'Movie already in watchlist' })
   async addToWatchlist(
+    @Body(ValidationPipe) createWatchlistDto: CreateWatchlistDto,
     @Request() req: any,
-    @Body() createWatchlistDto: CreateWatchlistDto,
   ) {
-    return this.watchlistService.addToWatchlist(
+    return await this.watchlistService.addToWatchlist(
       req.user.id,
       createWatchlistDto,
     );
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Remove movie from watchlist' })
+  @ApiResponse({
+    status: 200,
+    description: 'Movie removed from watchlist successfully',
+  })
+  @ApiResponse({ status: 404, description: 'Watchlist item not found' })
+  @ApiResponse({
+    status: 403,
+    description: 'Cannot remove from other users watchlist',
+  })
   async removeFromWatchlist(
-    @Request() req: any,
     @Param('id', ParseIntPipe) id: number,
+    @Request() req: any,
   ) {
     await this.watchlistService.removeFromWatchlist(req.user.id, id);
-    return { message: 'Item removed from watchlist successfully' };
+    return { message: 'Movie removed from watchlist successfully' };
   }
 
   @Get()
-  async getUserWatchlist(
-    @Request() req: any,
-    @Query('type') type?: WatchlistType,
-  ) {
-    return this.watchlistService.getUserWatchlist(req.user.id, type);
+  @ApiOperation({ summary: 'Get user watchlist' })
+  @ApiQuery({ name: 'type', enum: WatchlistType, required: false })
+  @ApiResponse({ status: 200, description: 'Watchlist retrieved successfully' })
+  async getWatchlist(@Request() req: any, @Query('type') type?: WatchlistType) {
+    return await this.watchlistService.getUserWatchlist(req.user.id, type);
   }
 
-  @Get('movie/:movieId/check')
+  @Get('stats')
+  @ApiOperation({ summary: 'Get watchlist statistics' })
+  @ApiResponse({
+    status: 200,
+    description: 'Watchlist stats retrieved successfully',
+  })
+  async getWatchlistStats(@Request() req: any) {
+    return await this.watchlistService.getWatchlistStats(req.user.id);
+  }
+
+  @Get('check/:movieId')
+  @ApiOperation({ summary: 'Check if movie is in watchlist' })
+  @ApiQuery({ name: 'type', enum: WatchlistType, required: false })
+  @ApiResponse({
+    status: 200,
+    description: 'Check result retrieved successfully',
+  })
   async checkMovieInWatchlist(
-    @Request() req: any,
     @Param('movieId', ParseIntPipe) movieId: number,
+    @Request() req: any,
     @Query('type') type?: WatchlistType,
   ) {
     const isInWatchlist = await this.watchlistService.isMovieInWatchlist(
@@ -60,10 +104,5 @@ export class WatchlistController {
       type,
     );
     return { isInWatchlist };
-  }
-
-  @Get('stats')
-  async getWatchlistStats(@Request() req: any) {
-    return this.watchlistService.getWatchlistStats(req.user.id);
   }
 }
