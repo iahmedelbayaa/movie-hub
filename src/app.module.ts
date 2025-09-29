@@ -7,6 +7,7 @@ import { User } from './entities/user.entity';
 import { Genre } from './entities/genre.entity';
 import { Movie } from './entities/movie.entity';
 import { AuthModule } from './modules/auth.module';
+import { MovieModule } from './modules/movie.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { AuthModule } from './modules/auth.module';
 
     // Feature modules
     AuthModule,
+    MovieModule,
   ],
   controllers: [],
   providers: [],
