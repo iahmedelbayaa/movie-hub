@@ -2,36 +2,41 @@ import {
   Controller,
   Post,
   Body,
-  HttpCode,
+  ValidationPipe,
   HttpStatus,
-  UseGuards,
-  Get,
-  Request,
+  HttpCode,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { AuthService } from '../services/auth.service';
-import { CreateUserDto, LoginDto } from '../dtos/auth.dto';
+import { CreateUserDto, LoginDto } from 'src/dtos/auth.dto';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
-  async register(@Body() createUserDto: CreateUserDto) {
-    return this.authService.register(createUserDto);
+  @ApiOperation({ summary: 'Register a new user' })
+  @ApiBody({ type: CreateUserDto })
+  @ApiResponse({
+    status: 201,
+    description: 'User registered successfully',
+  })
+  @ApiResponse({ status: 409, description: 'User already exists' })
+  async register(@Body(ValidationPipe) createUserDto: CreateUserDto) {
+    return await this.authService.register(createUserDto);
   }
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Body() loginDto: LoginDto) {
-    return this.authService.login(loginDto);
-  }
-
-  @Get('profile')
-  @UseGuards(AuthGuard('jwt'))
-  getProfile(@Request() req: any) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: _, ...userWithoutPassword } = req.user;
-    return userWithoutPassword;
+  @ApiOperation({ summary: 'Login user' })
+  @ApiBody({ type: LoginDto })
+  @ApiResponse({
+    status: 200,
+    description: 'User logged in successfully',
+  })
+  @ApiResponse({ status: 401, description: 'Invalid credentials' })
+  async login(@Body(ValidationPipe) loginDto: LoginDto) {
+    return await this.authService.login(loginDto);
   }
 }
