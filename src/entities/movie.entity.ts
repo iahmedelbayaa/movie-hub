@@ -97,3 +97,43 @@ export class Movie {
   // Virtual field for average rating
   averageRating?: number;
 }
+
+export interface TmdbMovie {
+  id: number;
+  title: string;
+  overview: string;
+  release_date: string;
+  poster_path: string;
+  backdrop_path: string;
+  vote_average: number;
+  vote_count: number;
+  popularity: number;
+  original_language: string;
+  original_title: string;
+  adult: boolean;
+  genre_ids: number[];
+}
+
+export interface TmdbGenre {
+  id: number;
+  name: string;
+}
+
+export interface TmdbMovieDetails extends TmdbMovie {
+  runtime: number;
+  budget: number;
+  revenue: number;
+  tagline: string;
+  genres: TmdbGenre[];
+}
+
+export interface TmdbGenresResponse {
+  genres: TmdbGenre[];
+}
+
+export interface TmdbResponse<T> {
+  page: number;
+  results: T[];
+  total_pages: number;
+  total_results: number;
+}
