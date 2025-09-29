@@ -1,11 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { WatchlistService } from './watchlist.service';
-import { UserWatchlist, WatchlistType } from '../entities/user-watchlist.entity';
+import {
+  UserWatchlist,
+  WatchlistType,
+} from '../entities/user-watchlist.entity';
 import { Movie } from '../entities/movie.entity';
 import { CreateWatchlistDto } from '../dtos/watchlist.dto';
-import { NotFoundException, ConflictException, ForbiddenException } from '@nestjs/common';
+import {
+  NotFoundException,
+  ConflictException,
+  ForbiddenException,
+} from '@nestjs/common';
 
 describe('WatchlistService', () => {
   let service: WatchlistService;
@@ -57,7 +63,9 @@ describe('WatchlistService', () => {
     }).compile();
 
     service = module.get<WatchlistService>(WatchlistService);
-    mockWatchlistRepository.createQueryBuilder.mockReturnValue(mockQueryBuilder);
+    mockWatchlistRepository.createQueryBuilder.mockReturnValue(
+      mockQueryBuilder,
+    );
   });
 
   afterEach(() => {
@@ -95,9 +103,9 @@ describe('WatchlistService', () => {
 
       mockMovieRepository.findOne.mockResolvedValue(null);
 
-      await expect(service.addToWatchlist(1, createWatchlistDto)).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        service.addToWatchlist(1, createWatchlistDto),
+      ).rejects.toThrow(NotFoundException);
     });
 
     it('should throw ConflictException if movie already in watchlist', async () => {
@@ -109,9 +117,9 @@ describe('WatchlistService', () => {
       mockMovieRepository.findOne.mockResolvedValue(mockMovie);
       mockWatchlistRepository.findOne.mockResolvedValue(mockWatchlistItem);
 
-      await expect(service.addToWatchlist(1, createWatchlistDto)).rejects.toThrow(
-        ConflictException,
-      );
+      await expect(
+        service.addToWatchlist(1, createWatchlistDto),
+      ).rejects.toThrow(ConflictException);
     });
   });
 
@@ -126,7 +134,9 @@ describe('WatchlistService', () => {
         where: { id: 1 },
         relations: ['user'],
       });
-      expect(mockWatchlistRepository.remove).toHaveBeenCalledWith(mockWatchlistItem);
+      expect(mockWatchlistRepository.remove).toHaveBeenCalledWith(
+        mockWatchlistItem,
+      );
     });
 
     it('should throw NotFoundException if watchlist item does not exist', async () => {
@@ -137,7 +147,7 @@ describe('WatchlistService', () => {
       );
     });
 
-    it('should throw ForbiddenException if user tries to remove another user\'s item', async () => {
+    it("should throw ForbiddenException if user tries to remove another user's item", async () => {
       const otherUserItem = { ...mockWatchlistItem, user: { id: 2 } };
       mockWatchlistRepository.findOne.mockResolvedValue(otherUserItem);
 
