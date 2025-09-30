@@ -22,7 +22,7 @@ import {
 import { WatchlistService } from '../services/watchlist.service';
 import { WatchlistType } from '../entities/user-watchlist.entity';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
-import { CreateWatchlistDto } from 'src/dtos/watchlist.dto';
+import { CreateWatchlistDto } from '../dtos/watchlist.dto';
 
 @ApiTags('watchlist')
 @Controller('watchlist')
