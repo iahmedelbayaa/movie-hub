@@ -20,8 +20,8 @@ import {
 } from '@nestjs/swagger';
 
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
-import { RatingService } from 'src/services/rate.service';
-import { CreateRatingDto, UpdateRatingDto } from 'src/dtos/rating.dto';
+import { RatingService } from '../services/rate.service';
+import { CreateRatingDto, UpdateRatingDto } from '../dtos/rating.dto';
 
 @ApiTags('ratings')
 @Controller('ratings')
