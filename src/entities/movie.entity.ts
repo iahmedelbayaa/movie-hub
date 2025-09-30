@@ -38,7 +38,7 @@ export class Movie {
   @Column({
     name: 'vote_average',
     type: 'decimal',
-    precision: 3,
+    precision: 4,
     scale: 1,
     default: 0,
   })
@@ -47,7 +47,7 @@ export class Movie {
   @Column({ name: 'vote_count', default: 0 })
   voteCount: number;
 
-  @Column({ type: 'decimal', precision: 3, scale: 1, default: 0 })
+  @Column({ type: 'decimal', precision: 8, scale: 1, default: 0 })
   popularity: number;
 
   @Column({ name: 'original_language', length: 5, nullable: true })

@@ -16,7 +16,7 @@ import {
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import { MovieService } from '../services/movie.service';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
-import { GetMoviesDto, MovieResponseDto } from 'src/dtos/movie.dto';
+import { GetMoviesDto, MovieResponseDto } from '../dtos/movie.dto';
 
 @ApiTags('movies')
 @Controller('movies')
